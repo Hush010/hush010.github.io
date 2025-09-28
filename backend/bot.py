@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pipecat.pipeline.pipeline import Pipeline
-from pipecat.transports.webrtc import WebRTCTransport
+from pipecat.transports.aiortc import WebRTCSFUTransport
 from pipecat.context import SimpleContextManager
 from pipecat.transports.services.openai import OpenAIChatService
 from pipecat.transports.services.deepgram import DeepgramSTTService
