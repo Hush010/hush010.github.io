@@ -1,45 +1,59 @@
 import os
+from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-from pipecat.pipeline.pipeline import Pipeline
-from pipecat.transports.aiortc import WebRTCSFUTransport
-from pipecat.context import SimpleContextManager
-from pipecat.transports.services.openai import OpenAIChatService
-from pipecat.transports.services.deepgram import DeepgramSTTService
-from pipecat.transports.services.cartesia import CartesiaTTSService
 
+# Load .env
 load_dotenv()
 
-# Track how many turns have been spoken
-turns = {"count": 0}
+# Safe import for Pipecat WebRTC transport
+try:
+    from pipecat.transports.aiortc import WebRTCSFUTransport
+except ImportError:
+    from pipecat.transports.webrtc import WebRTCSFUTransport
 
-class LimitedContextManager(SimpleContextManager):
-    def on_turn_end(self):
-        turns["count"] += 1
-        if turns["count"] >= 3:  # after 3 exchanges, exit
-            print("Conversation limit reached, shutting down...")
-            os._exit(0)
+from pipecat.pipeline import Pipeline
+from pipecat.transports.services.openai import OpenAIChat
+from pipecat.transports.services.deepgram import DeepgramSTT
+from pipecat.transports.services.cartesia import CartesiaTTS
 
-def make_pipeline():
-    transport = WebRTCTransport()
-    stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
-    llm = OpenAILLMService(api_key=os.getenv("OPENAI_API_KEY"))
-    tts = CartesiaTTSService(api_key=os.getenv("CARTESIA_API_KEY"))
+app = Flask(__name__)
 
-    context_mgr = LimitedContextManager(
-        system_prompt="You are a friendly voice agent. Greet the user, ask one follow-up, then say goodbye."
-    )
+@app.route("/call", methods=["POST"])
+def call():
+    """
+    Start a minimal 3-turn prototype call.
+    """
 
-    pipeline = Pipeline([
-        transport.input(),
-        stt,
-        context_mgr,
-        llm,
-        tts,
-        transport.output(),
-    ])
+    # Setup services
+    stt = DeepgramSTT(api_key=os.getenv("DEEPGRAM_API_KEY"))
+    llm = OpenAIChat(api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4o-mini")
+    tts = CartesiaTTS(api_key=os.getenv("CARTESIA_API_KEY"))
 
-    return pipeline
+    # WebRTC transport
+    transport = WebRTCSFUTransport()
+
+    # Pipeline
+    pipeline = Pipeline([stt, llm, tts, transport])
+
+    # Run conversation (dummy, 3 turns)
+    conversation = [
+        "Hello, who are you?",
+        "Nice to meet you. Can you say something else?",
+        "Great, this is the end of the test."
+    ]
+
+    responses = []
+    for turn in conversation:
+        response = pipeline.run(turn)
+        responses.append(response)
+
+    return jsonify({"status": "ok", "responses": responses})
+
+
+@app.route("/")
+def index():
+    return "✅ Pipecat prototype backend is running"
+
 
 if __name__ == "__main__":
-    pipeline = make_pipeline()
-    pipeline.run()
+    app.run(host="0.0.0.0", port=5000)
