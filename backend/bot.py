@@ -1,3 +1,7 @@
+import pkg_resources
+print(">>> Pipecat version:", pkg_resources.get_distribution("pipecat-ai").version)
+
+
 import os
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
