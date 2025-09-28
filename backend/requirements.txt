@@ -1,4 +1,4 @@
-pipecat-ai==0.0.86
+pipecat-ai==0.0.79
 fastapi==0.115.2
 uvicorn==0.32.0
 httpx==0.27.2
