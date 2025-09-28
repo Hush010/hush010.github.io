@@ -1,11 +1,11 @@
 import os
 from dotenv import load_dotenv
 from pipecat.pipeline.pipeline import Pipeline
-from pipecat.transports import WebRTCTransport
+from pipecat.transports.webrtc import WebRTCTransport
 from pipecat.context import SimpleContextManager
-from pipecat.services.openai import OpenAILLMService
-from pipecat.services.deepgram import DeepgramSTTService
-from pipecat.services.cartesia import CartesiaTTSService
+from pipecat.transports.services.openai import OpenAIChatService
+from pipecat.transports.services.deepgram import DeepgramSTTService
+from pipecat.transports.services.cartesia import CartesiaTTSService
 
 load_dotenv()
 
