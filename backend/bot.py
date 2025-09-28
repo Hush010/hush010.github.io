@@ -6,15 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Safe import for Pipecat WebRTC transport
-try:
-    from pipecat.transports.aiortc import WebRTCSFUTransport
-except ImportError:
-    try:
-        from pipecat.transports.services.webrtc import WebRTCSFUTransport
-    except ImportError:
-        raise ImportError(
-            "WebRTCSFUTransport not found. Try upgrading/downgrading pipecat-ai."
-        )
+from pipecat.transports.webrtc import WebRTCSFUTransport
+transport = WebRTCSFUTransport()
+
 
 from pipecat.pipeline import Pipeline
 from pipecat.transports.services.openai import OpenAIChat
