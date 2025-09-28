@@ -8,7 +8,3 @@ anyio==4.4.0
 starlette==0.40.0
 flask==3.0.3
 
-# Core AI/voice SDKs
-openai==1.52.0
-deepgram-sdk==2.12.0
-cartesia==0.2.0
