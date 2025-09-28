@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from pipecat import Pipeline
+from pipecat.pipeline.pipeline import Pipeline
 from pipecat.transports import WebRTCTransport
 from pipecat.context import SimpleContextManager
 from pipecat.services.openai import OpenAILLMService
