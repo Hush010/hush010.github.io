@@ -9,7 +9,12 @@ load_dotenv()
 try:
     from pipecat.transports.aiortc import WebRTCSFUTransport
 except ImportError:
-    from pipecat.transports.webrtc import WebRTCSFUTransport
+    try:
+        from pipecat.transports.services.webrtc import WebRTCSFUTransport
+    except ImportError:
+        raise ImportError(
+            "WebRTCSFUTransport not found. Try upgrading/downgrading pipecat-ai."
+        )
 
 from pipecat.pipeline import Pipeline
 from pipecat.transports.services.openai import OpenAIChat
