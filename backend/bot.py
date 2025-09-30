@@ -1,3 +1,8 @@
+import importlib.metadata, pipecat
+
+print(">>> Pipecat version:", importlib.metadata.version("pipecat-ai"))
+print(">>> Pipecat path:", pipecat.__file__)
+
 import pkg_resources
 print(">>> Pipecat version:", pkg_resources.get_distribution("pipecat-ai").version)
 
