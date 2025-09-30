@@ -1,0 +1,11 @@
+pipecat-ai==0.0.79
+fastapi==0.115.2
+uvicorn==0.32.0
+httpx==0.27.2
+pydantic>=2.7,<3.0
+python-dotenv==1.0.1
+anyio==4.4.0
+starlette==0.40.0
+flask==3.0.3
+setuptools==75.1.0
+aiortc==1.9.0
